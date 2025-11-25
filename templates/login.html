@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Login / Sign Up</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins','Segoe UI',Tahoma,Verdana,sans-serif;
+    }
+
+    /* PAGE BACKGROUND + SCROLL FIX */
+    body{
+      background:
+        linear-gradient(to right, rgba(70,20,20,.7), rgba(150,75,85,.7)),
+        url('{{ url_for("static", filename="background 1.jpg") }}');
+      background-size:cover;
+      background-position:center;
+
+      min-height:100vh;
+      padding:4rem 1rem;      
+      overflow-y:auto;        
+      display:block;          
+    }
+
+    /* Glowing Floating Shapes */
+    .shape{
+      position:absolute;
+      border-radius:50%;
+      filter:blur(70px);
+      opacity:.55;
+      animation:float 6s ease-in-out infinite alternate;
+      z-index:-1;
+    }
+    .shape.one{
+      width:300px;height:300px;
+      background:#ffd70066;
+      top:15%;left:10%;
+    }
+    .shape.two{
+      width:240px;height:240px;
+      background:#71151566;
+      bottom:10%;right:12%;
+      animation-duration:7.5s;
+    }
+
+    @keyframes float{
+      0%{transform:translateY(0)}
+      100%{transform:translateY(-40px)}
+    }
+
+    /* Auth Card (Centered Fix Applied) */
+    .auth-card{
+      width:100%;
+      max-width:500px;
+      padding:2.4rem 2.3rem;
+      border-radius:22px;
+      background:white;
+      backdrop-filter:blur(18px);
+      border:1px solid white;
+      box-shadow:0 15px 35px rgba(0,0,0,.25);
+      text-align:center;
+      animation:fadeUp 1s ease both;
+
+      /* FIX: center the card horizontally */
+      margin: 0 auto;
+    }
+
+    @keyframes fadeUp{
+      0%{opacity:0;transform:translateY(20px)}
+      100%{opacity:1;transform:translateY(0)}
+    }
+
+    h2{
+      margin-bottom:1rem;
+      font-size:2rem;
+      font-weight:900;
+      background:linear-gradient(45deg,#711515,#b52828,#711515);
+      -webkit-background-clip:text;
+      color:transparent;
+    }
+
+    .flash{
+      margin-bottom:1rem;
+      font-weight:600;
+    }
+
+    .input-group{
+      margin-bottom:1rem;
+      text-align:left;
+      animation:fadeUp .8s ease both;
+    }
+
+    label{
+      display:block;
+      margin-bottom:.35rem;
+      font-weight:600;
+      color:#222;
+    }
+
+    input, select{
+      width:100%;
+      padding:.85rem;
+      border-radius:12px;
+      border:1.5px solid #bbb;
+      outline:none;
+      font-size:1rem;
+      transition:.25s;
+      background:rgba(255,255,255,0.7);
+    }
+
+    input:focus, select:focus{
+      border-color:#711515;
+      box-shadow:0 0 8px rgba(48,1,1,.35);
+      background:#fff;
+    }
+
+    /* Buttons */
+    .btn{
+      width:100%;
+      padding:1rem;
+      margin-top:.8rem;
+      border:none;
+      border-radius:50px;
+      font-size:1.05rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:.25s;
+      letter-spacing:.4px;
+    }
+
+    .btn-primary{
+      background:#711515;
+      color:#fff;
+    }
+    .btn-primary:hover{
+      background:#551010;
+      transform:translateY(-3px);
+      box-shadow:0 10px 20px rgba(0,0,0,.25);
+    }
+
+    .switch-text{
+      margin-top:1.3rem;
+    }
+
+    .switch-text a{
+      color:#711515;
+      font-weight:700;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .switch-text a:hover{
+      text-decoration:underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background glowing shapes -->
+  <div class="shape one"></div>
+  <div class="shape two"></div>
+
+  <!-- Auth Card -->
+  <div class="auth-card">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for cat, msg in messages %}
+          <div class="flash" style="color: {{ 'red' if cat=='danger' else 'green' }}">
+            {{ msg }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h2 id="form-title">Login</h2>
+
+    <!-- LOGIN FORM -->
+    <form id="login-form" action="{{ url_for('login') }}" method="POST">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" required/>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" required/>
+      </div>
+
+      <button class="btn btn-primary">Login</button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="signup-form" action="{{ url_for('register') }}" method="POST" style="display:none;">
+
+      <div class="input-group"><label>Full Name</label><input type="text" name="name" required/></div>
+      <div class="input-group"><label>Email</label><input type="email" name="email" required/></div>
+      <div class="input-group"><label>Contact Number</label><input type="text" name="contact_number" required/></div>
+      <div class="input-group"><label>Password</label><input type="password" name="password" required/></div>
+
+      <div class="input-group">
+        <label>Branch</label>
+        <select name="branch" required>
+          <option value="">Select Branch</option>
+          <option>AIML</option><option>CSE</option><option>ECE</option>
+          <option>EEE</option><option>MECH</option>
+        </select>
+      </div>
+
+      <div class="input-group"><label>Semester</label><input type="number" name="semester" min="1" max="8"/></div>
+      <div class="input-group"><label>Street</label><input type="text" name="address_street"/></div>
+      <div class="input-group"><label>City</label><input type="text" name="address_city"/></div>
+      <div class="input-group"><label>Pincode</label><input type="text" name="address_pincode"/></div>
+
+      <button class="btn btn-primary">Create Account</button>
+    </form>
+
+    <p class="switch-text">
+      <a href="#" id="toggle">Don't have an account? Sign Up</a>
+    </p>
+
+  </div>
+
+  <script>
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const toggle = document.getElementById('toggle');
+    const title = document.getElementById('form-title');
+
+    toggle.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const showingLogin = loginForm.style.display !== 'none';
+
+      loginForm.style.display = showingLogin ? 'none' : 'block';
+      signupForm.style.display = showingLogin ? 'block' : 'none';
+
+      title.textContent = showingLogin ? 'Sign Up' : 'Login';
+      toggle.textContent = showingLogin
+        ? 'Already have an account? Login'
+        : "Don't have an account? Sign Up";
+    });
+  </script>
+
+</body>
+</html>

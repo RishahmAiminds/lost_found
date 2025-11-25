@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matched Items</title>
+
+  <style>
+
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url('https://th-i.thgim.com/public/todays-paper/tp-national/tp-karnataka/vmtdwy/article65509076.ece/alternates/LANDSCAPE_1200/Heritage-UVCE-b%2BGI49TBMB9.3.jpg.jpg')
+        no-repeat center center/cover;
+      z-index: -3;
+    }
+
+   
+    .image-wrapper {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      z-index: -2;
+    }
+
+    
+    .gradient-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        rgba(0,0,0,0.3),
+        rgba(0,0,0,0.55)
+      );
+      z-index: -1;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+      padding: 2rem 1rem;
+      color: black;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+      color: #ffeaea;
+      text-shadow: 0 3px 8px rgba(0,0,0,0.5);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    /* Card Styling */
+    .match-card {
+      background: white;
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 1.4rem;
+      margin: 1.2rem auto;
+      max-width: 900px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      animation: fadeInUp 0.8s ease-out;
+      color: #fff;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+    }
+
+    .imgwrap {
+      height: 200px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .imgwrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .label {
+      font-weight: 800;
+      color: #1a0808;
+    }
+
+    p {
+      color: black;
+      line-height: 1.4;
+    }
+
+    /* Button */
+    .btn {
+      padding: 0.8rem 1.4rem;
+      background: #711515;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-weight: 700;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: #8e1a1a;
+      transform: translateY(-2px);
+    }
+
+    /* Flash messages */
+    .flash-msg {
+      text-align: center;
+      padding: 0.6rem 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .danger { background: rgba(255,0,0,0.25); }
+    .success { background: rgba(0,255,0,0.25); }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg"></div>
+  <div class="image-wrapper"></div>
+  <div class="gradient-overlay"></div>
+
+  <h1>Matched Lost & Found Items</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for c, m in messages %}
+        <div class="flash-msg {{ 'danger' if c=='danger' else 'success' }}">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% for m in matches %}
+  <div class="match-card">
+    <div class="grid">
+
+      <!-- Lost Item Block -->
+      <div>
+        <div class="imgwrap">
+          {% if m.lost_image %}
+            <img src="{{ url_for('static', filename=m.lost_image) }}" alt="Lost">
+          {% else %}
+            <span style="color:#ddd">🖼️ No Lost Image</span>
+          {% endif %}
+        </div>
+        <p><span class="label">Lost Category:</span> {{ m.lost_category }}</p>
+        <p><span class="label">Lost Description:</span> {{ m.lost_description }}</p>
+      </div>
+
+      <!-- Found Item Block -->
+      <div>
+        <div class="imgwrap">
+          {% if m.found_image %}
+            <img src="{{ url_for('static', filename=m.found_image) }}" alt="Found">
+          {% else %}
+            <span style="color:#ddd">🖼️ No Found Image</span>
+          {% endif %}
+        </div>
+        <p><span class="label">Found Description:</span> {{ m.found_description }}</p>
+        <p><span class="label">Found Location:</span> {{ m.location_found }}</p>
+      </div>
+
+    </div>
+
+    <form action="{{ url_for('claim') }}" method="POST">
+      <input type="hidden" name="match_id" value="{{ m.match_id }}">
+      <button class="btn">Claim this Item</button>
+    </form>
+  </div>
+
+  {% else %}
+    <p style="text-align:center;opacity:.85;color:#fff;">No matches found yet.</p>
+  {% endfor %}
+
+</body>
+</html>

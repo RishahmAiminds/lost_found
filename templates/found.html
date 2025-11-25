@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Post Found Item</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Verdana,sans-serif;}
+    body{background:linear-gradient(to right, rgba(95,91,91,.85), rgba(193,139,147,.85)), url('{{ url_for("static", filename="background 1.jpg") }}'); background-size:cover; min-height:100vh; display:flex; justify-content:center; align-items:center; padding:2rem;}
+    .form-card{background:#fff; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,.2); padding:2.2rem; width:100%; max-width:560px;}
+    h2{text-align:center; color:#711515; margin-bottom:1rem;}
+    .input-group{margin-bottom:1rem;}
+    label{display:block;margin-bottom:.35rem;font-weight:600}
+    input, select, textarea{width:100%; padding:.8rem; border-radius:10px; border:1.5px solid #ccc; outline:none; font-size:1rem;}
+    textarea{resize:none;height:100px}
+    button{width:100%; background:#ffd700; color:#333; padding:.9rem; border:none; border-radius:50px; font-weight:700; cursor:pointer; margin-top:.5rem;}
+    button:hover{background:#e6c200; transform:translateY(-2px)}
+    .back-link{display:block;text-align:center;margin-top:1rem;color:#711515;text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="form-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for c,m in messages %}
+        <div style="color: {{ 'red' if c=='danger' else 'green' }}; margin-bottom:1rem;">{{ m }}</div>
+      {% endfor %}{% endif %}
+    {% endwith %}
+
+    <h2>❤ Post Found Item</h2>
+    <form action="{{ url_for('found') }}" method="POST" enctype="multipart/form-data">
+      <div class="input-group"><label>Category</label><input type="text" name="category" required></div>
+      <div class="input-group"><label>Description</label><textarea name="description" required></textarea></div>
+      <div class="input-group"><label>Date Found</label><input type="date" name="date_found" required></div>
+      <div class="input-group">
+        <label>Location Found</label>
+        <select name="location_found" required>
+          <option value="">Select Location</option>
+          <option>Library</option><option>Canteen</option><option>Hostel</option>
+          <option>Classroom</option><option>Playground</option><option>Lab</option><option>Other</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="unclaimed">Unclaimed</option>
+          <option value="pending">Pending</option>
+          <option value="claimed">Claimed</option>
+        </select>
+      </div>
+      <div class="input-group"><label>Upload Image (optional)</label><input type="file" name="image" accept="image/*"></div>
+      <button type="submit">Submit Found Item</button>
+      <a class="back-link" href="{{ url_for('index') }}">⬅ Back to Home</a>
+    </form>
+  </div>
+</body>
+</html>

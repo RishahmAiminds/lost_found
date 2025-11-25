@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost Items</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    }
+
+   
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url('https://th-i.thgim.com/public/todays-paper/tp-national/tp-karnataka/vmtdwy/article65509076.ece/alternates/LANDSCAPE_1200/Heritage-UVCE-b%2BGI49TBMB9.3.jpg.jpg')
+        no-repeat center center/cover;
+      z-index: -3;
+    }
+
+
+    .image-wrapper {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      z-index: -2;
+    }
+
+
+    .gradient-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.55)
+      );
+      z-index: -1;
+    }
+
+    
+    body {
+      background: transparent !important;
+      padding: 6rem 1rem 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: #d78585;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .search {
+      max-width: 900px;
+      margin: 0.5rem auto 1.2rem auto;
+      display: flex;
+      gap: .6rem;
+    }
+
+    .search input {
+      flex: 1;
+      padding: .8rem 1rem;
+      border-radius: 12px;
+      border: 1.5px solid #ccc;
+    }
+
+    .search button {
+      padding: .8rem 1.2rem;
+      border: none;
+      border-radius: 12px;
+      background: #711515;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.12);
+      overflow: hidden;
+      transition: .25s;
+      border-left: 7px solid #a82323; /* KEEP the same */
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,.18);
+    }
+
+    .imgwrap {
+      height: 180px;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .imgwrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .content {
+      padding: 1rem;
+      color: #333;
+    }
+
+    .label {
+      font-weight: 800;
+      color: #711515;
+    }
+
+    .home-btn {
+      display: block;
+      width: max-content;
+      margin: 1.4rem auto 0 auto;
+      background: #711515;
+      color: #fff;
+      padding: .75rem 1.6rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .empty {
+      text-align: center;
+      opacity: .85;
+      margin-top: 2rem;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+  </style>
+
+</head>
+<body>
+
+  <!-- Background Layers -->
+  <div class="bg"></div>
+  <div class="image-wrapper"></div>
+  <div class="gradient-overlay"></div>
+
+  <h1>All Lost Items</h1>
+
+  <form class="search" method="get">
+    <input type="text" name="q" placeholder="Search by category, description, or location..." value="{{ q or '' }}">
+    <button type="submit">Search</button>
+  </form>
+
+  {% if items %}
+  <div class="container">
+    {% for item in items %}
+    <div class="card">
+      <div class="imgwrap">
+        <img src="{{ item.image_path | imgurl }}" alt="Lost image">
+      </div>
+      <div class="content">
+        <p><span class="label">Category:</span> {{ item.category }}</p>
+        <p><span class="label">Description:</span> {{ item.description }}</p>
+        <p><span class="label">Date Lost:</span> {{ item.date_lost }}</p>
+        <p><span class="label">Location:</span> {{ item.location_lost }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="empty">No lost items found.</p>
+  {% endif %}
+
+  <a href="{{ url_for('index') }}" class="home-btn">⬅ Back to Home</a>
+
+</body>
+</html>

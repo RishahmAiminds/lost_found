@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    }
+
+    /* Background image layer */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1519681393784-d120267933ba')
+        no-repeat center center/cover;
+      z-index: -3;
+    }
+
+    /* Dark blur wrapper */
+    .image-wrapper {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      z-index: -2;
+    }
+
+    /* Gradient overlay */
+    .gradient-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.55)
+      );
+      z-index: -1;
+    }
+
+    /* Original design preserved */
+    body {
+      background: transparent !important;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #d78585;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .claim {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.12);
+      padding: 1rem;
+      margin: 1rem auto;
+      max-width: 900px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 160px 1fr 160px;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .thumb {
+      height: 120px;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .label {
+      font-weight: 800;
+      color: #711515;
+    }
+
+    .actions {
+      display: flex;
+      gap: .6rem;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: .6rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .approve {
+      background: #1e8e3e;
+      color: #fff;
+    }
+
+    .reject {
+      background: #b3261e;
+      color: #fff;
+    }
+
+    .proof a {
+      color: #0068c9;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- Background Layers -->
+  <div class="bg"></div>
+  <div class="image-wrapper"></div>
+  <div class="gradient-overlay"></div>
+
+  <h1>Admin – Claims Review</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for c,m in messages %}
+        <div style="text-align:center;color:{{ 'red' if c=='danger' else 'green' }}; margin: 1rem 0;">
+          {{ m }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% for c in claims %}
+  <div class="claim">
+    <div class="row">
+
+      <div class="thumb">
+        {% if c.found_image %}
+          <img src="{{ url_for('static', filename=c.found_image) }}" alt="Found">
+        {% else %}
+          <span>🖼️ No Image</span>
+        {% endif %}
+      </div>
+
+      <div>
+        <p><span class="label">Claimant:</span> {{ c.claimant_name }}</p>
+        <p><span class="label">Found Item:</span> {{ c.found_description }}</p>
+        <p><span class="label">Found Status:</span> {{ c.found_status }}</p>
+
+        <p class="proof">
+          <span class="label">Proof:</span>
+          {% if c.proof_document %}
+            <a href="{{ url_for('static', filename=c.proof_document) }}" target="_blank">View</a>
+          {% else %}
+            No proof
+          {% endif %}
+        </p>
+
+        <p><span class="label">Claim Status:</span> {{ c.claim_status }}</p>
+      </div>
+
+      <div class="actions">
+        <form action="{{ url_for('approve_claim', claim_id=c.claim_id) }}" method="POST">
+          <button class="btn approve" {% if c.claim_status=='approved' %}disabled{% endif %}>
+            Approve
+          </button>
+        </form>
+
+        <form action="{{ url_for('reject_claim', claim_id=c.claim_id) }}" method="POST">
+          <button class="btn reject" {% if c.claim_status=='rejected' %}disabled{% endif %}>
+            Reject
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  {% else %}
+    <p style="text-align:center;opacity:.75;color:#fff;">No claims yet.</p>
+  {% endfor %}
+
+</body>
+</html>

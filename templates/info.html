@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Overview | Campus Lost & Found</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body{
+      background:linear-gradient(to right,
+        rgba(45, 18, 18, 0.88),
+        rgba(150, 80, 95, 0.88)
+      ),
+      url("{{ url_for('static', filename='background 1.jpg') }}");
+      background-size:cover;
+      background-position:center;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:2rem;
+      color:#fff;
+      overflow:hidden;
+    }
+
+    .glow{
+      position:absolute;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      filter:blur(80px);
+      opacity:0.55;
+      animation:float 7s ease-in-out infinite alternate;
+    }
+    .g1{background:#ffd700aa; top:8%; left:6%;}
+    .g2{background:#711515aa; bottom:10%; right:8%; animation-duration:9s;}
+
+    @keyframes float{
+      0%{transform:translateY(0);}
+      100%{transform:translateY(-45px);}
+    }
+
+    .card{
+      background:rgba(255,255,255,0.12);
+      border-radius:30px;
+      padding:3rem 2.7rem;
+      max-width:780px;
+      width:100%;
+      text-align:center;
+      box-shadow:none; /* removed */
+      animation:fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(35px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    h1{
+      font-size:2.8rem;
+      font-weight:800;
+      color:#ffd700;
+      margin-bottom:0.7rem;
+      letter-spacing:1px;
+      text-shadow:none; /* removed glow */
+    }
+
+    h2{
+      font-size:1.45rem;
+      margin-bottom:1.6rem;
+      color:#ffecec;
+      opacity:0.9;
+      text-shadow:none; /* removed */
+    }
+
+    p{
+      opacity:0.92;
+      font-size:1.1rem;
+      line-height:1.75;
+      margin:1.3rem 0;
+      text-shadow:none; /* removed */
+    }
+
+    .details-box{
+      background:rgba(255,255,255,0.18);
+      border-radius:18px;
+      padding:1.4rem 1.2rem;
+      margin-top:1.3rem;
+      text-align:left;
+      box-shadow:none; /* removed */
+    }
+
+    .details-box p{
+      margin:0.4rem 0;
+      font-size:1.05rem;
+      text-shadow:none; /* removed */
+    }
+
+    .details-box strong{
+      color:#ffd700;
+      font-size:1.15rem;
+      text-shadow:none; /* removed */
+    }
+
+    .btn{
+      margin-top:2.3rem;
+      background:#ffd700;
+      color:#333;
+      padding:0.9rem 2.6rem;
+      border:none;
+      border-radius:45px;
+      font-size:1.15rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.35s ease;
+      letter-spacing:0.6px;
+      box-shadow:none; /* removed */
+    }
+
+    .btn:hover{
+      background:#e6c200;
+      transform:translateY(-4px);
+      box-shadow:none; /* removed */
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+
+  <div class="card">
+    <h1>Campus Lost & Found System</h1>
+    <h2>A Smart Database-Driven Solution for Students</h2>
+
+    <p>
+      This project showcases the integration of Database Management Systems with a modern,
+      interactive web interface.
+      It enables students to report lost belongings, upload details of found items, and allows
+      the backend triggers to automatically match both entries intelligently.
+    </p>
+
+    <div class="details-box">
+      <p><strong>Project Title:</strong> Campus Lost & Found Management System</p>
+      <p><strong>Developed By:</strong> Risha H M</p>
+      <p><strong>USN:</strong> U25UV23T006042</p>
+      <p><strong>Department:</strong> AIML</p>
+      <p><strong>Submitted To:</strong> Samyama Gunjal G H</p>
+      <p><strong>Course:</strong> Database Management Systems</p>
+      <p><strong>Academic Year:</strong> 2025</p>
+    </div>
+
+    <button class="btn" onclick="window.location.href='{{ url_for('index') }}'">
+      Continue to Project →
+    </button>
+  </div>
+
+</body>
+</html>
